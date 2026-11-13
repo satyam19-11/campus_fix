@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% from "_macros.html" import pill %}
+{% block title %}All tickets - CampusFix{% endblock %}
+{% block content %}
+<h1>All tickets</h1>
+<div class="stats">
+  <a href="{{ url_for('admin_home') }}" class="{{ '' if flt else 'on' }}"><b>{{ counts.values()|sum }}</b>All</a>
+  {% for s in STATUSES %}<a href="{{ url_for('admin_home', status=s) }}" class="{{ 'on' if flt == s else '' }}"><b>{{ counts.get(s, 0) }}</b>{{ s }}</a>{% endfor %}
+</div>
+{% if rows %}
+<div class="table-wrap"><table>
+  <tr><th>Ticket</th><th>Category</th><th>Location</th><th>Student</th><th>Status</th><th>Technician / assign</th></tr>
+  {% for r in rows %}
+  <tr>
+    <td><a href="{{ url_for('complaint_detail', cid=r.complaint_id) }}">#{{ r.complaint_id }}</a></td>
+    <td>{{ r.category_name }}</td><td>{{ r.location }}</td><td>{{ r.student_name }}</td>
+    <td>{{ pill(r.current_status) }}</td>
+    <td>{% if r.current_status == 'Reported' %}
+      <form class="inline" method="post" action="{{ url_for('assign') }}">
+        <input type="hidden" name="complaint_id" value="{{ r.complaint_id }}">
+        <select name="technician_id" aria-label="Technician for ticket {{ r.complaint_id }}">
+          {% for t in techs %}<option value="{{ t.technician_id }}">{{ t.name }} ({{ t.speciality }})</option>{% endfor %}
+        </select>
+        <button type="submit">Assign</button>
+      </form>
+    {% else %}{{ r.technician_name or '-' }}{% endif %}</td>
+  </tr>
+  {% endfor %}
+</table></div>
+{% else %}<div class="empty">No tickets with this status.</div>{% endif %}
+
+<h2>Add a technician</h2>
+<form method="post" action="{{ url_for('add_technician') }}" class="stack">
+  <label for="tn">Name</label><input id="tn" name="name" required>
+  <label for="te">Email</label><input id="te" name="email" type="email" required>
+  <label for="ts">Speciality</label><input id="ts" name="speciality" placeholder="Electrical" required>
+  <label for="tp">Password (6+ characters)</label><input id="tp" name="password" type="password" minlength="6" required>
+  <p><button type="submit">Add technician</button></p>
+</form>
+{% endblock %}

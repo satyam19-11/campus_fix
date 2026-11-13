@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Reports - CampusFix{% endblock %}
+{% block content %}
+<h1>Reports</h1>
+<p class="sub">Each result is a live SQL query. Open "Show SQL" to see it.</p>
+{% for r in reports %}
+<h2>{{ r.title }}</h2>
+<p class="concept">{{ r.concept }}</p>
+{% if r.rows %}
+<div class="table-wrap"><table>
+  <tr>{% for c in r.cols %}<th>{{ c }}</th>{% endfor %}</tr>
+  {% for row in r.rows %}<tr>{% for v in row %}<td>{{ '-' if v is none else v }}</td>{% endfor %}</tr>{% endfor %}
+</table></div>
+{% else %}<div class="empty">No rows.</div>{% endif %}
+<details><summary>Show SQL</summary><pre>{{ r.sql }}</pre></details>
+{% endfor %}
+{% endblock %}

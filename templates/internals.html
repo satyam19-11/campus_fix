@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Under the hood - CampusFix{% endblock %}
+{% block content %}
+<h1>Under the hood</h1>
+<p class="sub">The query plans below come straight from the database engine (EXPLAIN QUERY PLAN).</p>
+<h2>Indexes at work</h2>
+{% for label, sql, plan in plans %}
+<div class="panel" style="margin-bottom:.8rem">
+  <strong>{{ label }}</strong>
+  <pre>{{ sql }}</pre>
+  <ul>{% for p in plan %}<li>{{ p }}</li>{% endfor %}</ul>
+</div>
+{% endfor %}
+<h2>Indexes, triggers and views in this database</h2>
+<div class="table-wrap"><table>
+  <tr><th>Type</th><th>Name</th><th>Table</th></tr>
+  {% for o in objects %}<tr><td>{{ o.type }}</td><td>{{ o.name }}</td><td>{{ o.tbl_name }}</td></tr>{% endfor %}
+</table></div>
+{% endblock %}

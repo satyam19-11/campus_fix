@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "_macros.html" import pill %}
+{% block title %}{{ title }} - CampusFix{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+{% if new_button %}<p><a class="btn" href="{{ url_for('new_complaint') }}">Report an issue</a></p>{% endif %}
+{% if rows %}
+<div class="table-wrap"><table>
+  <tr><th>Ticket</th><th>Category</th><th>Location</th>{% if show_student %}<th>Student</th>{% endif %}<th>Status</th><th>Technician</th><th>Reported</th></tr>
+  {% for r in rows %}
+  <tr>
+    <td><a href="{{ url_for('complaint_detail', cid=r.complaint_id) }}">#{{ r.complaint_id }}</a></td>
+    <td>{{ r.category_name }}</td><td>{{ r.location }}</td>
+    {% if show_student %}<td>{{ r.student_name }}</td>{% endif %}
+    <td>{{ pill(r.current_status) }}</td><td>{{ r.technician_name or '-' }}</td><td>{{ r.created_at }}</td>
+  </tr>
+  {% endfor %}
+</table></div>
+{% else %}<div class="empty">{{ empty }}</div>{% endif %}
+{% endblock %}

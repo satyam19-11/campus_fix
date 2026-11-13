@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Sign in - CampusFix{% endblock %}
+{% block content %}
+<div class="two">
+  <div>
+    <h1>Report it. Track it. See it fixed.</h1>
+    <p class="sub">Every campus maintenance issue becomes a ticket with an owner and a history.</p>
+    <form method="post" class="stack">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required autofocus>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" required>
+      <p><button type="submit">Sign in</button></p>
+    </form>
+    <p>New student? <a href="{{ url_for('register') }}">Create an account</a></p>
+  </div>
+  <div class="panel">
+    <h2 style="margin-top:0">Demo accounts</h2>
+    <div class="table-wrap"><table class="demo">
+      <tr><th>Role</th><th>Email</th><th>Password</th></tr>
+      {% for role, email, pw in demo %}<tr><td>{{ role }}</td><td>{{ email }}</td><td>{{ pw }}</td></tr>{% endfor %}
+    </table></div>
+  </div>
+</div>
+{% endblock %}

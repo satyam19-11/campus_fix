@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% from "_macros.html" import pill %}
+{% block title %}Ticket #{{ t.complaint_id }} - CampusFix{% endblock %}
+{% block content %}
+<h1>Ticket #{{ t.complaint_id }} {{ pill(t.current_status) }}</h1>
+<p class="sub">{{ t.category_name }} at {{ t.location }}</p>
+<div class="two">
+  <div>
+    <div class="panel">
+      <dl class="facts">
+        <dt>Description</dt><dd>{{ t.description }}</dd>
+        <dt>Reported by</dt><dd>{{ t.student_name }}</dd>
+        <dt>Reported on</dt><dd>{{ t.created_at }}</dd>
+        <dt>Technician</dt><dd>{{ t.technician_name or 'Not assigned yet' }}</dd>
+      </dl>
+    </div>
+    {% if nxt %}
+    <form method="post" action="{{ url_for('change_status', cid=t.complaint_id) }}" style="margin-top:1rem">
+      <input type="hidden" name="new_status" value="{{ nxt }}">
+      <button type="submit">Mark as {{ nxt }}</button>
+    </form>
+    {% endif %}
+  </div>
+  <div>
+    <h2 style="margin-top:0">History</h2>
+    <ul class="timeline">
+      {% for h in history %}
+      <li><strong>{{ h.new_status }}</strong>{% if h.old_status %} (was {{ h.old_status }}){% endif %}
+        <small>{{ h.changed_at }}{% if h.who %} by {{ h.who }}{% endif %}</small></li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

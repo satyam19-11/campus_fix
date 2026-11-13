@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: campusfix
+    runtime: python
+    plan: free
+    region: singapore
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: CAMPUSFIX_SECRET
+        generateValue: true
